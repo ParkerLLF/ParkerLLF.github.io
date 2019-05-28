@@ -1,0 +1,100 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+@font-face {  /*声明字体  引用字体*/
+		font-family: "icomoon";  /*我们自己起名字可以*/
+  		src:url('../fonts/icomoon.eot?7kkyc2');
+  		src:url('../fonts/icomoon.eot?7kkyc2#iefix') format('embedded-opentype'),
+			url('../fonts/icomoon.ttf?7kkyc2') format('truetype'),
+			url('../fonts/icomoon.woff?7kkyc2') format('woff'),
+			url('../fonts/icomoon.svg?7kkyc2#icomoon') format('svg');				
+  		font-style: normal;  /*倾斜字体正常*/
+}
+body {
+	background-color: grey;
+	height: 2000px;
+}
+
+
+.header {
+	height: 100px;
+	background-color: #fafafa;
+}
+.inner{
+	width: 1200px;
+	height: 100px;
+/*	background-color: pink;*/
+	margin: 0 auto;
+	line-height: 100px;
+}
+.logo {
+	height: 100px;
+	float: left;
+}
+.nav{
+	float: right;
+}
+.nav ul{
+	overflow: hidden;
+}   
+.nav li{
+	float: left;
+	margin: 0 0px;
+	list-style: none;
+}
+.nav li a{
+	font-family: "icomoon";
+	font-size: 16px;
+	color: #333;
+	text-decoration: none;	
+	height: 100px;
+	width: 100px;
+	display: block;
+	text-align: center;
+}
+.nav li a:hover{
+	font-family: "icomoon";
+	color: #FAFAFA;
+	background-color: #86C166;
+	border-radius: 25px;
+}
+
+.banner {
+	background: #FAFAFA;
+	height: 600px;
+/*	background: url(../img/00.jpg) no-repeat top center ;*/
+}
+.banner-bd {
+	width: 1200px;
+	height: 600px;
+	margin: 0 auto;
+	margin-top: 15px;
+	/* background: lightpink; */
+	position: relative;
+}
+.banner-bd-l {
+	background: #FEDFE1;
+	width: 300px;
+	height: 600px;
+	float: left;
+	position: absolute;
+	border-radius: 15px;
+}
+
+.banner-bd-l h3 {
+	height: 40px;
+	font-family: "icomoon";
+	color: #000;
+	font-size: 30px;
+	text-align: center;
+	display: block;
+	line-height: 40px;
+}
+.banner-ba-r {
+	background: aquamarine;
+	width: 875px;
+	height: 600px;
+	float: right;
+	border-radius: 15px;
+}
