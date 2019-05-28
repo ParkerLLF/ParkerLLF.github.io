@@ -2,6 +2,13 @@
 	margin: 0;
 	padding: 0;
 }
+
+li {
+	list-style: none;
+}
+a {
+	text-decoration: none;
+}
 @font-face {  /*声明字体  引用字体*/
 		font-family: "icomoon";  /*我们自己起名字可以*/
   		src:url('../fonts/icomoon.eot?7kkyc2');
@@ -34,6 +41,7 @@ body {
 }
 .nav{
 	float: right;
+	width: 620px;
 }
 .nav ul{
 	overflow: hidden;
@@ -58,6 +66,7 @@ body {
 	color: #FAFAFA;
 	background-color: #86C166;
 	border-radius: 25px;
+	box-shadow: 2px 2px 1px 1px rgba(0, 0, 0, 0.3);
 }
 
 .banner {
@@ -91,6 +100,10 @@ body {
 	display: block;
 	line-height: 40px;
 }
+.banner-bd-l ul li {
+	
+}
+
 .banner-ba-r {
 	background: aquamarine;
 	width: 875px;
