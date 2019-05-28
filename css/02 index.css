@@ -98,3 +98,8 @@ body {
 	float: right;
 	border-radius: 15px;
 }
+
+img {
+	width: 500px;
+	height: 282px;
+}
