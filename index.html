@@ -1,61 +1,143 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<title></title>
-		<link rel="stylesheet" type="text/css" href="css/index.css"/>
-	</head>
-	<style type="text/css">
-	</style>
-	<body>
-		<!--header开始-->
-		<div class="header">
-			<div class="inner">
-				<div class="logo">
-					<a href="#">
-						<img src="https://dwz.cn/39lf5cV4" height="100" width="300"/>
-					</a>
-				</div>
-				<div class="nav">
-					<ul>
-						<li><a href="#"> 首页</a></li>
-						<li><a href="#"> 相册</a></li>
-						<li><a href="https://weibo.com/6076063694/profile?topnav=1&wvr=6"> 微博</a></li>
-						<li><a href="https://github.com/ParkerLLF"> GitHub</a></li>
-						<li><a href="#"> Facebook</a></li>
-						<li><a href="#"> Twitter</a></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<!--banner开始-->
-		<div class="banner">
-			<div class="banner-bd">
-				<div class="banner-bd-l">
-					<h3></h3>
-					<ul>
-						<li><a href="#">123456</a></li>
-						<li><a href="#">123456</a></li>
-						<li><a href="#">123456</a></li>
-						<li><a href="#">123456</a></li>
-						<li><a href="#">123456</a></li>
-						<li><a href="#">123456</a></li>
-						<li><a href="#">123456</a></li>
-						<li><a href="#">123456</a></li>
-						<li><a href="#">123456</a></li>
-					</ul>
-				</div>			
-				<div class="banner-ba-r">
-					<div class="photos">
-						<div class="pic"></div>
-						<div class="pic"></div>
-					</div>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>你是不是不会这个操作？</title>
+  <style>
+    :root {
+      --angle: -24deg;      /* 旋转角度 */
+      --opacity: 0.18;      /* 透明度（越大越醒目） */
+      --tile-w: 360;        /* 单块宽度(px) */
+      --tile-h: 160;        /* 单块高度(px) */
+      --gap: 18px;          /* 网格间距 */
+      --tint: 0,0,0;        /* 主色（深色=黑，浅色=白） */
+    }
 
-				</div>
-			</div>
-		</div>
-		
-		
-		
-	</body>
+    html, body {
+      height: 100%;
+      margin: 0;
+      background: #fff;
+      color: #111;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans SC", "Microsoft YaHei", Arial, sans-serif;
+      overflow: hidden; /* 防止出现滚动条，在需要时可改为 auto */
+    }
+
+    /* 容器：真正的“内容块”铺满屏 */
+    .tiles {
+      position: fixed;
+      inset: 0;
+      display: grid;
+      grid-template-columns: repeat(var(--cols), 1fr);
+      grid-auto-rows: var(--tile-h-px);
+      gap: var(--gap);
+      padding: var(--gap);
+      z-index: 0;
+      pointer-events: none; /* 需要交互时去掉 */
+    }
+
+    /* 单个内容块（不是背景）*/
+    .tile {
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.7);
+      box-shadow: 0 4px 18px rgba(0,0,0,0.06) inset, 0 0 0 1px rgba(0,0,0,0.04);
+      transform: rotate(var(--angle));
+      transform-origin: center center;
+      mix-blend-mode: multiply; /* 与背景叠加更像水印 */
+      opacity: var(--opacity);
+    }
+
+    .tile span {
+      display: inline-block;
+      text-align: center;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      line-height: 1.35;
+      font-size: clamp(14px, 2.3vw, 24px);
+      color: rgb(var(--tint));
+      user-select: text; /* 允许选择文本，证明是真实内容块 */
+      padding: 0 8px;
+    }
+
+    /* 置顶一条提示（可删）*/
+    .hud {
+      position: fixed;
+      right: 12px;
+      bottom: 12px;
+      z-index: 2;
+      font-size: 12px;
+      color: #666;
+      background: rgba(255,255,255,0.75);
+      border-radius: 999px;
+      padding: 8px 12px;
+      box-shadow: 0 6px 22px rgba(0,0,0,.08);
+      backdrop-filter: blur(6px);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      html, body { background: #0b0c10; color: #eaeaea; }
+      :root { --tint: 32,124,255; }
+      .hud { background: rgba(0,0,0,0.45); color: #d6e2ff; }
+      .tile { background: rgba(255,255,255,0.06); box-shadow: 0 0 0 1px rgba(255,255,255,0.06) inset; mix-blend-mode: screen; }
+    }
+  </style>
+</head>
+<body>
+  <!-- 真正的内容块容器，将通过 JS 動态填充到足够覆盖屏幕的数量 -->
+  <div id="tiles" class="tiles" aria-hidden="false"></div>
+
+  <div class="hud">内容块已铺满屏幕（可复制文字）</div>
+
+  <script>
+    // 目标文本（可直接修改这行）
+    const TEXT = "用户@禁止带葱入内 你是不是不会这个操作？";
+
+    const $tiles = document.getElementById('tiles');
+
+    // 根据窗口尺寸计算需要的列数与行数，并填充足量的 tile
+    function layoutTiles() {
+      const tileW = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tile-w'));
+      const tileH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--tile-h'));
+      const gap = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gap'));
+
+      const usableW = window.innerWidth - gap * 2;
+      const usableH = window.innerHeight - gap * 2;
+
+      const cols = Math.max(1, Math.ceil(usableW / (tileW + gap)));
+      const rows = Math.max(1, Math.ceil(usableH / (tileH + gap)));
+
+      // 写入 CSS 变量供网格使用
+      $tiles.style.setProperty('--cols', cols);
+      $tiles.style.setProperty('--tile-h-px', tileH + 'px');
+
+      const needed = cols * rows;
+      const current = $tiles.children.length;
+
+      // 添加/删除到合适数量
+      if (current < needed) {
+        const frag = document.createDocumentFragment();
+        for (let i = current; i < needed; i++) {
+          const d = document.createElement('div');
+          d.className = 'tile';
+          const s = document.createElement('span');
+          s.textContent = TEXT;
+          d.appendChild(s);
+          frag.appendChild(d);
+        }
+        $tiles.appendChild(frag);
+      } else if (current > needed) {
+        for (let i = 0; i < current - needed; i++) {
+          $tiles.lastElementChild?.remove();
+        }
+      }
+    }
+
+    // 初始布局与监听尺寸变化
+    layoutTiles();
+    addEventListener('resize', layoutTiles);
+    addEventListener('orientationchange', layoutTiles);
+  </script>
+</body>
 </html>
